@@ -5,8 +5,8 @@ class Pacman{
         this.width = width;
         this.heigth = height;
         this.speed = speed;
-        this.current_direction = RIGHT;
-        this.nextDirection =  this.current_direction;
+        this.currentDirection = RIGHT;
+        this.nextDirection =  this.currentDirection;
         this.frameCount = 7;
         
         // this.nextDirection = DOWN
@@ -26,9 +26,7 @@ class Pacman{
 
         if(this.checkCollision()){
             this.moveBackwards();
-            this.direction = tempDirection;
-        }else{
-            this.moveBackwards();
+            return;
         }
 
         // this.currentDirection = this.nextDirection
@@ -75,8 +73,8 @@ class Pacman{
     }
 
     checkCollision(){
-        // chech if the x and y of pacman correspond to a block on the map that's 1
 
+        // chech if the x and y of pacman correspond to a block on the map that's 1
         if(  
             map[this.getMapY()][this.getMapX()] == 1 ||
             map[this.getMapYRightSide()][this.getMapX()] == 1 ||
@@ -94,32 +92,46 @@ class Pacman{
     }
 
     changeDirectionIfPossible(){
-        if (this.direction = this.nextDirection) return 
 
-        let tempDirection = this.direction
-        this.direction = this.nextDirection
+        console.log(" BEING CALLED: " + this.currentDirection)
+
+        console.log("this is the current direction: " + this.currentDirection)
+        console.log("this is the next direction: " + this.nextDirection)
+
+        if (this.direction == this.nextDirection) return 
+
+        let tempDirection = this.currentDirection;
+        this.currentDirection = this.nextDirection;
         this.moveForwards();
+
         if (this.checkCollision()){
             this.moveBackwards();
+            this.currentDirection = tempDirection;
         }
+        else{
+            this.moveBackwards();
+        }
+
+
+        console.log("this is the current direction: " + this.currentDirection)
+        console.log("this is the next direction: " + this.nextDirection)
     }
 
 
 
     changeAnimation(){
-
         // we update the frame to the next one or the first
-        this.currentFrame = ( (this.currentFrame == this.frameCount) ? 1 : this.currentFrame+1)
+        this.currentFrame = this.currentFrame == this.frameCount ? 1 : this.currentFrame+1
+        // this.update();
+        // this.currentDirection = this.nextDirection;
 
-        this.update();
+
+        console.log("this is the current direction: " + this.currentDirection)
+        console.log("this is the next direction: " + this.nextDirection)
         // draw();
-        
-
     }
 
     update(){
-        // this.currentDirection = this.nextDirection;
-
         // console.log("this is the current direction: " + this.currentDirection)
     }
 

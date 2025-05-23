@@ -90,6 +90,7 @@ let gameInterval = setInterval(gameLoop, 1000 /fps);
 let drawWalls = () => {
     for (let i = 0; i < map.length; i++){
         for (let j = 0; j <map[0].length ; j++){
+            
             // if it's a wall
             if (map[i][j] == 1){
                 createRect(
@@ -139,7 +140,7 @@ let drawWalls = () => {
 
 
 
-            if (i < map.length -1 && map[i+1][j] == 1){
+            if (i < map.length - 1 && map[i + 1][j] == 1){
                 createRect(
                     j * blockSize + wallOffset, 
                     i * blockSize + wallOffset, 
@@ -153,9 +154,30 @@ let drawWalls = () => {
 }
 
 
+
+
+
+
+let createNewPacman = () => {
+    pacman = new Pacman(
+        blockSize,
+        blockSize,
+        blockSize,
+        blockSize,
+        blockSize/5,
+    );
+};
+
+
+createNewPacman();
+gameLoop();
+
+
+
 window.addEventListener("keydown", (event) => {
 
     let k = event.keyCode;
+
     if (k == 37 || k == 65){
         // left arrow or a
         pacman.nextDirection = LEFT;
@@ -173,25 +195,4 @@ window.addEventListener("keydown", (event) => {
         pacman.nextDirection = DOWN;
         console.log("you");
     }
-
-
-
-
-
 })
-
-
-
-let createNewPacman = () => {
-    pacman = new Pacman(
-        blockSize,
-        blockSize,
-        blockSize,
-        blockSize,
-        blockSize/5,
-    );
-};
-
-
-createNewPacman();
-gameLoop();
