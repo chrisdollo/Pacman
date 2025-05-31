@@ -6,7 +6,10 @@ const canvas = document.getElementById("canvas");
 
 const canvasContext = canvas.getContext("2d");
 const pacmanFrames = document.getElementById("animation");
-const ghost = document.getElementById("ghost")
+const ghostFrames = document.getElementById("ghosts")
+
+
+
 
 let createRect = (x, y, width, height, color) => {
     canvasContext.fillStyle = color;
@@ -29,6 +32,13 @@ let foodColor = "orange";
 let score = 0;
 
 
+let ghostCount = 4;
+let ghosts = []
+
+
+
+
+
 
 
 let pacman;
@@ -42,6 +52,13 @@ let RIGHT = 4;
 let LEFT = 2;
 let UP = 3;
 let DOWN = 1;
+
+let  ghostLocation = [
+    {x:0,   y:0},
+    {x:176, y:0},
+    {x:0,   y:121},
+    {x:176, y:121}
+]
 
 
 
@@ -126,9 +143,16 @@ let draw = () => {
     drawFood();
     pacman.draw();
     drawScore();
+    drawGhosts();
 }
 
 let gameInterval = setInterval(gameLoop, 1000 /fps);
+
+let drawGhosts = () => {
+    for (let i = 0; i < ghosts.length ; i++){
+        ghosts[i].draw();
+    }
+}
 
 let drawWalls = () => {
     for (let i = 0; i < map.length; i++){
@@ -207,8 +231,32 @@ let createNewPacman = () => {
 };
 
 
+let createGhosts = () =>{
+    ghosts = []
+    for (let i = 0; i < ghostCount; i++){
+        let newGhost = new Ghost (
+            9*blockSize + (i%2 == 0? 0 :1) * blockSize,
+            10*blockSize + (i%2 == 0? 0 :1) * blockSize,
+            blockSize,
+            blockSize, 
+            pacman.speed/2,
+            ghostLocation[i % 4].x,
+            ghostLocation[i % 4].y,
+            124, 
+            116, 
+            6 + i
+        )
+
+        ghosts.push(newGhost);
+    }
+
+
+}
+
+
 createNewPacman();
 gameLoop();
+createGhosts();
 
 
 
