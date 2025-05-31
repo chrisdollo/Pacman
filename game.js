@@ -21,8 +21,16 @@ let fps = 30;
 let wallSpaceWidth = blockSize/ 1.5;
 let wallOffset = (blockSize - wallSpaceWidth)/2;
 
+let food_offset = blockSize / 4;
+
 let wallColor = "red";
 let InnerWallCollor = "black";
+let foodColor = "orange";
+let score = 0;
+
+
+
+
 let pacman;
 
 
@@ -50,7 +58,7 @@ let map = [
     [1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1],
     [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
     [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
-    [2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2],
+    [1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1],
     [1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 2, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1],
     [0, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 0],
     [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
@@ -73,6 +81,39 @@ let gameLoop = () =>{
 
 let update = () =>{
     pacman.moveProcess();
+    pacman.eat();
+}
+
+
+
+let drawFood = () => {
+
+    for (let i = 0; i < map.length; i++){
+
+        for (let j = 0; j < map[0].length; j++){
+
+            if (map[i][j] == 2){
+                createRect(
+                    j * blockSize + food_offset*1.5, 
+                    i * blockSize + food_offset*1.5, 
+                    food_offset, 
+                    food_offset, 
+                    foodColor
+                );
+            }
+        }
+    }
+}
+
+let drawScore = () => {
+
+    canvasContext.font = "20px NAMCO";
+    canvasContext.fillStyle = "white";
+    canvasContext.fillText(
+        "SCORE: " + score,
+        0,
+        blockSize * (map.length + 1)
+    )
 }
 
 
@@ -82,7 +123,9 @@ let draw = () => {
     createRect (0, 0, canvas.width, canvas.height, "black");
 
     drawWalls();
+    drawFood();
     pacman.draw();
+    drawScore();
 }
 
 let gameInterval = setInterval(gameLoop, 1000 /fps);
@@ -90,7 +133,7 @@ let gameInterval = setInterval(gameLoop, 1000 /fps);
 let drawWalls = () => {
     for (let i = 0; i < map.length; i++){
         for (let j = 0; j <map[0].length ; j++){
-            
+
             // if it's a wall
             if (map[i][j] == 1){
                 createRect(
@@ -125,9 +168,6 @@ let drawWalls = () => {
             }
 
 
-
-
-
             if (i > 0 && map[i-1][j] == 1 ){
                 createRect(
                     j * blockSize + wallOffset, 
@@ -137,7 +177,6 @@ let drawWalls = () => {
                     InnerWallCollor
                 );
             }
-
 
 
             if (i < map.length - 1 && map[i + 1][j] == 1){
@@ -152,7 +191,6 @@ let drawWalls = () => {
         }
     }
 }
-
 
 
 

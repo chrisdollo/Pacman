@@ -32,7 +32,29 @@ class Pacman{
         // this.currentDirection = this.nextDirection
     }
 
-    eat(){}
+    eat(){
+
+        // console.log("eating")
+
+        for (let i = 0; i < map.length; i++){
+            for (let j = 0; j < map[0].length; j++){
+                if (map[i][j] == 2 && this.getMapX() == j && this.getMapY() == i){
+                    
+                    // console.log(map[i][j])
+                    map[i][j] = 3;
+                    // console.log(map[i][j])
+
+
+
+                    score++;
+                    // console.log(map[i][j])
+                }
+            }
+        }
+        // if ( this.x && this.y ){
+
+        // }
+    }
 
     moveBackwards(){
 
@@ -93,10 +115,10 @@ class Pacman{
 
     changeDirectionIfPossible(){
 
-        console.log(" BEING CALLED: " + this.currentDirection)
+        // console.log(" BEING CALLED: " + this.currentDirection)
 
-        console.log("this is the current direction: " + this.currentDirection)
-        console.log("this is the next direction: " + this.nextDirection)
+        // console.log("this is the current direction: " + this.currentDirection)
+        // console.log("this is the next direction: " + this.nextDirection)
 
         if (this.direction == this.nextDirection) return 
 
@@ -113,8 +135,8 @@ class Pacman{
         }
 
 
-        console.log("this is the current direction: " + this.currentDirection)
-        console.log("this is the next direction: " + this.nextDirection)
+        // console.log("this is the current direction: " + this.currentDirection)
+        // console.log("this is the next direction: " + this.nextDirection)
     }
 
 
@@ -126,8 +148,8 @@ class Pacman{
         // this.currentDirection = this.nextDirection;
 
 
-        console.log("this is the current direction: " + this.currentDirection)
-        console.log("this is the next direction: " + this.nextDirection)
+        // console.log("this is the current direction: " + this.currentDirection)
+        // console.log("this is the next direction: " + this.nextDirection)
         // draw();
     }
 
