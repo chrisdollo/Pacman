@@ -53,7 +53,10 @@ let LEFT = 2;
 let UP = 3;
 let DOWN = 1;
 
-let  ghostLocation = [
+
+
+
+let ghostLocation = [
     {x:0,   y:0},
     {x:176, y:0},
     {x:0,   y:121},
@@ -90,6 +93,12 @@ let map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ];
 
+let randomTargetForghosts = [
+    {x: 1*blockSize,                        y: 1 * blockSize},
+    {x: 1*blockSize,                        y: (map.length - 2) * blockSize},
+    {x: (map[0].length - 2) * blockSize,    y: blockSize},
+    {x: (map[0].length - 2) * blockSize,    y: (map.length - 2) * blockSize},
+]
 
 let gameLoop = () =>{
     update();
@@ -99,6 +108,9 @@ let gameLoop = () =>{
 let update = () =>{
     pacman.moveProcess();
     pacman.eat();
+    for(let i = 0; i < ghosts.length; i++){
+        ghosts[i].moveProcess();
+    }
 }
 
 

@@ -14,10 +14,36 @@ class Ghost{
         this.imageWidth = imageWidth;
         this.imageHeigth = imageHeigth;
         this.range = range;
+        this.randomTargetIndex = parseInt(
+            Math.random() * randomTargetForghosts.length
+        );
+
+        // this.target = randomTargetsForGhosts[this.randomTargetIndex];
+
+        setInterval(() => {
+            this.changeRandomDirection();
+        }, 10000);
+    }
+
+    changeRandomDirection(){
+        this.randomTargetIndex += 1;
+        this.randomTargetIndex = this.randomTargetIndex % 4;
+
     }
 
 
+    // move process for the ghosts 
     moveProcess(){
+
+        // if pacman is in range it's the target for our ghost
+        if (this.isInRangeOfPacman()){
+            this.target = pacman
+        }
+
+        // else we pick a random target
+        else {
+            this.target = randomTargetForghosts[this.randomTargetIndex];
+        }
 
         this.changeDirectionIfPossible();
         this.moveForwards();
@@ -78,6 +104,7 @@ class Ghost{
             map[this.getMapY()][this.getMapXRightSide()] == 1 ||
             map[this.getMapYRightSide()][this.getMapXRightSide()] == 1 
             ){
+
             return true;
         }
 
@@ -88,17 +115,38 @@ class Ghost{
 
     }
 
+    isInRangeOfPacman(){
+        let xDistance = Math.abs(pacman.getMapX() - this.getMapX());
+        let yDistance = Math.abs(pacman.getMapY() - this.getMapY());
+
+        if (Math.sqrt(xDistance * xDistance + yDistance * yDistance)  <= this.range){return true;}
+        return false;
+    }
+
+
+
     changeDirectionIfPossible(){
 
-        // console.log(" BEING CALLED: " + this.currentDirection)
-
-        // console.log("this is the current direction: " + this.currentDirection)
-        // console.log("this is the next direction: " + this.nextDirection)
-
-        if (this.direction == this.nextDirection) return 
-
         let tempDirection = this.currentDirection;
-        this.currentDirection = this.nextDirection;
+
+        // console.log("before calculation ", this.currentDirection)
+
+        this.currentDirection = this.calculateNewDirection(
+            map,
+            parseInt(this.target.x / blockSize),
+            parseInt(this.target.y / blockSize)
+        )
+
+        // console.log("after calculation ", this.currentDirection)
+        // console.log(tempDirection)
+
+        if (typeof this.currentDirection == "undefined"){
+            this.currentDirection = tempDirection;
+            return;
+        }
+
+
+
         this.moveForwards();
 
         if (this.checkCollision()){
@@ -109,9 +157,91 @@ class Ghost{
             this.moveBackwards();
         }
 
+    }
 
-        // console.log("this is the current direction: " + this.currentDirection)
-        // console.log("this is the next direction: " + this.nextDirection)
+    calculateNewDirection(map, destX, destY){
+
+        let mp = [];
+        for (let i= 0; i <map.length ; i++){
+            mp[i] = map[i].slice();
+        }
+
+        let queue = [{
+            x: this.getMapX(),
+            y: this.getMapY(),
+            moves: []
+        },]
+
+        console.log(queue.length)
+
+
+        while(queue.length > 0){
+            let poped = queue.shift();
+            if(poped.x == destX && poped.y == destY){
+                // console.log(poped.moves[0])
+                return poped.moves[0]
+            }else{
+                mp[poped.y][poped.x] = 1;
+                let neighborList = this.addNeighbors(poped, mp)
+                for (let i = 0; i < neighborList.length; i++){
+                    queue.push(neighborList[i]);
+                }
+
+                // console.log(queue)
+            }
+        }
+
+        // console.log("gets to here")
+        return UP; // default
+    }
+
+
+    addNeighbors(poped, mp){
+        let queue = []
+        let numOfRows = mp.length
+        let numOfColumns = mp[0].length
+
+        if(
+            poped.x -1 >= 0 &&
+            poped.x - 1 < numOfRows &&
+            mp[poped.y][poped.x -1] != 1
+        ){
+            let tempMoves = poped.moves.slice();
+            tempMoves.push(LEFT);
+            queue.push({x: poped.x -1, y: poped.y, moves: tempMoves });
+        }
+
+        if(
+            poped.x + 1 >= 0 &&
+            poped.x + 1 < numOfRows &&
+            mp[poped.y][poped.x + 1] != 1
+        ){
+            let tempMoves = poped.moves.slice();
+            tempMoves.push(RIGHT);
+            queue.push({x: poped.x  + 1, y: poped.y, moves: tempMoves });
+        }
+
+        if(
+            poped.y -1 >= 0 &&
+            poped.y - 1 < numOfRows &&
+            mp[poped.y - 1][poped.x] != 1
+        ){
+            let tempMoves = poped.moves.slice();
+            tempMoves.push(UP);
+            queue.push({x: poped.x, y: poped.y -1, moves: tempMoves });
+        }
+
+        if(
+            poped.y + 1 >= 0 &&
+            poped.y + 1 < numOfRows &&
+            mp[poped.y + 1][poped.x] != 1
+        ){
+            let tempMoves = poped.moves.slice();
+            tempMoves.push(DOWN);
+            queue.push({x: poped.x, y: poped.y + 1, moves: tempMoves});
+        }
+
+        return queue;
     }
 
 
