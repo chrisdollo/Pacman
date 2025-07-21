@@ -34,6 +34,8 @@ let score = 0;
 
 let ghostCount = 4;
 let ghosts = []
+let lives = 3
+let foodCount = 0;
 
 
 
@@ -93,6 +95,14 @@ let map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ];
 
+for (let i = 0; i < map.length; i++){
+    for (let j = 0; j <  map[0].length; j++){
+        if(map[i][j] == 2){
+            foodCount++;
+        }
+    }
+}
+
 let randomTargetForghosts = [
     {x: 1*blockSize,                        y: 1 * blockSize},
     {x: 1*blockSize,                        y: (map.length - 2) * blockSize},
@@ -101,8 +111,9 @@ let randomTargetForghosts = [
 ]
 
 let gameLoop = () =>{
-    update();
     draw();
+    update();
+    
 }
 
 let update = () =>{
@@ -111,7 +122,90 @@ let update = () =>{
     for(let i = 0; i < ghosts.length; i++){
         ghosts[i].moveProcess();
     }
+
+    if(pacman.checkGhostCollision()){
+        console.log("touched");
+        restartGame()
+    }
+
+    if (score >= foodCount){
+        drawWin();
+        clearInterval(gameInterval)
+    }
 }
+
+let restartGame = () => {
+    createNewPacman();
+    createGhosts();
+    lives--;
+
+    if(lives == 0){
+        gameOver();
+    }
+};
+
+let gameOver = ()=>{
+    
+    drawGameOver();
+    clearInterval(gameInterval);
+}
+
+let drawGameOver= () => {
+
+    canvasContext.font = "20px Emulogic";
+    canvasContext.fillStyle = "white";
+    canvasContext.fillText(
+        "GAME OVER!",
+        150,
+        200
+    );
+    
+}
+
+let drawWin= () => {
+
+    canvasContext.font = "20px Emulogic";
+    canvasContext.fillStyle = "white";
+    canvasContext.fillText(
+        "YOU WIN!",
+        150,
+        200
+    );
+    
+}
+
+
+let drawLives = () =>{
+
+    let livesDrawingCoordinateX = blockSize * 7
+    let livesDrawingCoordinateY = blockSize * (map.length + 1)
+
+    canvasContext.font = "20px ARIAl";
+    canvasContext.fillStyle = "white";
+    canvasContext.fillText(
+        "LIVES: ",
+        livesDrawingCoordinateX,
+        livesDrawingCoordinateY
+    );
+
+    for (let i = 0 ; i < lives; i++){
+        canvasContext.drawImage(
+            pacmanFrames,
+            2 * blockSize,
+            0,
+            blockSize,
+            blockSize,
+            livesDrawingCoordinateX + 70 + ((blockSize*1.3) * i),
+            livesDrawingCoordinateY - 17,
+            blockSize,
+            blockSize
+        );
+    }
+
+}
+
+
+
 
 
 
@@ -136,7 +230,7 @@ let drawFood = () => {
 
 let drawScore = () => {
 
-    canvasContext.font = "20px NAMCO";
+    canvasContext.font = "20px ARIAl";
     canvasContext.fillStyle = "white";
     canvasContext.fillText(
         "SCORE: " + score,
@@ -156,6 +250,7 @@ let draw = () => {
     pacman.draw();
     drawScore();
     drawGhosts();
+    drawLives();
 }
 
 let gameInterval = setInterval(gameLoop, 1000 /fps);
@@ -279,18 +374,14 @@ window.addEventListener("keydown", (event) => {
     if (k == 37 || k == 65){
         // left arrow or a
         pacman.nextDirection = LEFT;
-        console.log("fessssseeesss");
     } else if (k == 38 || k == 87){
         // up arrow or a
         pacman.nextDirection = UP;
-        console.log("my gad");
     } else if (k == 39 || k == 68){
         // up arrow or a
         pacman.nextDirection = RIGHT;
-        console.log("eussss");
     } else if (k == 40 || k == 83){
         // up arrow or a
         pacman.nextDirection = DOWN;
-        console.log("you");
     }
 })

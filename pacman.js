@@ -111,14 +111,20 @@ class Pacman{
 
     checkGhostCollision(){
 
+        // for every ghost
+        for (let i = 0; i < ghosts.length; i++){
+
+            let ghost = ghosts[i]
+
+            // if the ghpst and paccman have the same coordinate
+            if (ghost.getMapX() == this.getMapX() && ghost.getMapY() == this.getMapY()){
+                return true;
+            }
+        }
+        return false;
     }
 
     changeDirectionIfPossible(){
-
-        // console.log(" BEING CALLED: " + this.currentDirection)
-
-        // console.log("this is the current direction: " + this.currentDirection)
-        // console.log("this is the next direction: " + this.nextDirection)
 
         if (this.direction == this.nextDirection) return 
 
