@@ -41,4 +41,4 @@ LEFT:   ← or A
 
 
 ## Author
-- Chris Dollo 
+- Chris Dollo (dollochrisdavid@gmail.com)
